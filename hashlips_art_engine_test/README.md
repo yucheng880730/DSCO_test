@@ -1,3 +1,6 @@
+# reference code
+https://github.com/HashLips/solidity_smart_contracts/blob/main/contracts/NFT_ON_CHAIN/NFT_START.sol
+
 # Welcome to HashLips 👄
 
 ![](https://github.com/HashLips/hashlips_art_engine/blob/main/logo.png)
