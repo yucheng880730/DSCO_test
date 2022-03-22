@@ -11,6 +11,7 @@ $$$$$$$$\ $$$$$$$$\  $$$$$$  |
 \________|\________| \______/           
 */
 
+
 // OpenZeppelin Contracts v4.4.1 (utils/Strings.sol)
 
 pragma solidity ^0.8.0;
@@ -1326,8 +1327,6 @@ pragma solidity >=0.7.0 <0.9.0;
  * account.
  */
 
-
-
 contract NFT is ERC721Enumerable, Ownable {
   using Strings for uint256;
 
@@ -1399,7 +1398,17 @@ contract NFT is ERC721Enumerable, Ownable {
         : "";
   }
 
+  // when user decide to upgeade NFT
+  function reMint(uint256 tokenId) public {
+    require(ownerOf(tokenId) == msg.sender);
+    _burn(tokenId);
+  }
+
   //only owner function
+  function mintOnlyOwner() public onlyOwner {
+    
+  }
+
   function setCost(uint256 _newCost) public onlyOwner {
     cost = _newCost;
   }
