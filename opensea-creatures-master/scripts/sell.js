@@ -18,7 +18,7 @@ const OWNER_ADDRESS = process.env.OWNER_ADDRESS;
 const NETWORK = process.env.NETWORK;
 const API_KEY = process.env.API_KEY || ""; // API key is optional but useful if you're doing a high volume of requests.
 
-const FIXED_PRICE_OPTION_ID = "1";
+const FIXED_PRICE_OPTION_ID = "3";
 const FIXED_PRICE = 0.05;
 const NUM_FIXED_PRICE_AUCTIONS = 10;
 
@@ -40,6 +40,9 @@ const mnemonicWalletSubprovider = new MnemonicWalletSubprovider({
 });
 const network =
   NETWORK === "mainnet" || NETWORK === "live" ? "mainnet" : "rinkeby";
+
+// https://mainnet.infura.io/v3/db9c55d5ca3249a3be6f063ec26d53db
+// https://rinkeby.infura.io/v3/db9c55d5ca3249a3be6f063ec26d53db
 const infuraRpcSubprovider = new RPCSubprovider({
   rpcUrl: isInfura
     ? "https://" + network + ".infura.io/v3/" + NODE_API_KEY
@@ -67,24 +70,20 @@ async function main() {
   try {
     // Example: many fixed price auctions for a factory option.
     console.log("Creating fixed price auctions...");
-    const fixedSellOrders = await seaport.createFactorySellOrders({
-      asset: [
-        {
-          tokenId: "1",
-          tokenAddress: FACTORY_CONTRACT_ADDRESS,
-          // schemaName: WyvernSchemaName.ERC721,
-        },
-      ],
-      accountAddress: OWNER_ADDRESS,
+    const fixedPriceSellOrder = await seaport.createSellOrder({
+      asset: {
+        tokenId: FIXED_PRICE_OPTION_ID,
+        tokenAddress: FACTORY_CONTRACT_ADDRESS,
+      },
       startAmount: FIXED_PRICE,
-      numberOfOrders: NUM_FIXED_PRICE_AUCTIONS,
+      accountAddress: OWNER_ADDRESS,
     });
     console.log(
-      `Successfully made ${fixedSellOrders.length} fixed-price sell orders! ${fixedSellOrders[0].asset.openseaLink}\n`
+      `Successfully made ${fixedPriceSellOrder.length} fixed-price sell orders! ${fixedPriceSellOrder[0].asset.openseaLink}\n`
     );
   } catch (error) {
-    console.log("You get Error Oh No :(");
-    console.log(error.message);
+    console.log("Error :(");
+    console.log(error);
   }
 }
 
