@@ -10,8 +10,8 @@ require("dotenv").config();
 
 const MNEMONIC = process.env.MNEMONIC;
 const NODE_API_KEY = process.env.INFURA_KEY || process.env.ALCHEMY_KEY;
-const isInfura = !!process.env.INFURA_KEY;
-const CONTRACT_ADDRESS = process.env.FACTORY_CONTRACT_ADDRESS;
+// const isInfura = !!process.env.INFURA_KEY;
+const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
 const OWNER_ADDRESS = process.env.OWNER_ADDRESS;
 const NETWORK = process.env.NETWORK;
 
@@ -31,12 +31,9 @@ const mnemonicWalletSubprovider = new MnemonicWalletSubprovider({
   mnemonic: MNEMONIC,
   baseDerivationPath: BASE_DERIVATION_PATH,
 });
-const network =
-  NETWORK === "mainnet" || NETWORK === "live" ? "mainnet" : "rinkeby";
+
 const infuraRpcSubprovider = new RPCSubprovider({
-  rpcUrl: isInfura
-    ? "https://" + network + ".infura.io/v3/" + NODE_API_KEY
-    : "https://eth-" + network + ".alchemyapi.io/v2/" + NODE_API_KEY,
+  rpcUrl: "https://" + NETWORK + ".infura.io/v3/" + NODE_API_KEY,
 });
 
 const providerEngine = new Web3ProviderEngine();
@@ -47,10 +44,7 @@ providerEngine.start();
 const seaport = new OpenSeaPort(
   providerEngine,
   {
-    networkName:
-      NETWORK === "mainnet" || NETWORK === "live"
-        ? Network.Main
-        : Network.Rinkeby,
+    networkName: Network.Rinkeby,
   },
   (arg) => console.log(arg)
 );
@@ -67,14 +61,14 @@ async function sell() {
     network: NETWORK,
     tokenAddress: CONTRACT_ADDRESS,
     tokenId: 6,
-    tokenType: "ERC1155",
+    tokenType: "ERC721",
     userAddress: OWNER_ADDRESS,
-    startAmount,
-    endAmount,
+    startAmount: 1,
+    endAmount: 1,
     expirationTime: startAmount > endAmount && expirationTime, // Only set if you startAmount > endAmount
   });
 
-  console.log("create Sell order Success");
+  console.log(`create Sell order Success ${sellOrder}`);
 }
 
 sell();
